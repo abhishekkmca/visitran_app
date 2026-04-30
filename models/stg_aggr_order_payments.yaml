@@ -1,0 +1,65 @@
+model:
+  table_name: customer_payments
+  schema_name: stg
+source:
+  table_name: payments
+  schema_name: dev
+  materialization: TABLE
+reference:
+- dev_payments
+- dev_orders
+transform:
+  type_join_0:
+    join:
+      tables:
+      - type: Inner
+        criteria:
+        - condition:
+            lhs:
+              type: COLUMN
+              column:
+                data_type: String
+                table_name: payments
+                column_name: order_id
+                schema_name: dev
+            rhs:
+              type: COLUMN
+              value:
+              - ''
+              column:
+                data_type: Number
+                table_name: orders
+                column_name: order_id
+                schema_name: dev
+            operator: NEQ
+        joined_table:
+          table_name: orders
+          schema_name: dev
+      transformation_id: type_join_0
+      transformation_type: join
+    type: join
+  groups_and_aggregation_1:
+    type: groups_and_aggregation
+    groups_and_aggregation:
+      group:
+      - customer_id
+      filter:
+        criteria: []
+      having:
+        criteria: []
+      aggregate_columns:
+      - alias: total_amount
+        column: amount_in_dollars
+        function: SUM
+      transformation_id: groups_and_aggregation_1
+      transformation_type: groups_and_aggregation
+presentation:
+  sort:
+  - column: customer_id
+    order_by: ASC
+    data_type: Number
+  hidden_columns:
+  - '*'
+transform_order:
+- type_join_0
+- groups_and_aggregation_1

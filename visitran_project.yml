@@ -1,0 +1,17 @@
+name: Jaffle Shop Finalized
+version: 1
+description: "Jaffle Shop is a sample project created by the visitran team. \nIt provides\
+  \ insights that help businesses analyse customer behavior, revenue and order trends,\
+  \ turning raw data into valuable information for reporting and decision-making.\
+  \ \nThis is to help you understand and explore the product's capabilities."
+schema: raw
+connection:
+  type: postgres
+model_paths:
+- models
+seed_paths:
+- seeds
+test_paths:
+- tests
+config:
+  materialization: TABLE

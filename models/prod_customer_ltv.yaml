@@ -1,0 +1,80 @@
+model:
+  table_name: customer_final
+  schema_name: prod
+source:
+  table_name: customers
+  schema_name: dev
+  materialization: TABLE
+reference:
+- stg_order_summaries
+- stg_payments_by_type
+- dev_customers
+- stg_aggr_order_payments
+transform:
+  type_join_0:
+    join:
+      tables:
+      - type: Inner
+        criteria:
+        - condition:
+            lhs:
+              type: COLUMN
+              column:
+                data_type: Number
+                table_name: customers
+                column_name: customer_id
+                schema_name: dev
+            rhs:
+              type: COLUMN
+              column:
+                data_type: Number
+                table_name: customer_orders
+                column_name: customer_id
+                schema_name: stg
+            operator: EQ
+        joined_table:
+          table_name: customer_orders
+          schema_name: stg
+      - type: Inner
+        criteria:
+        - condition:
+            lhs:
+              type: COLUMN
+              column:
+                data_type: Number
+                table_name: customers
+                column_name: customer_id
+                schema_name: dev
+            rhs:
+              type: COLUMN
+              column:
+                data_type: Number
+                table_name: customer_payments
+                column_name: customer_id
+                schema_name: stg
+            operator: EQ
+        joined_table:
+          table_name: customer_payments
+          schema_name: stg
+      transformation_id: type_join_0
+      transformation_type: join
+    type: join
+  type_rename_column_1:
+    type: rename_column
+    rename_column:
+      mappings:
+      - new_name: customer_lifetime_value
+        old_name: total_amount
+        original_name: total_amount
+      transformation_id: type_rename_column_1
+      transformation_type: rename_column
+presentation:
+  sort:
+  - column: customer_id
+    order_by: ASC
+    data_type: Number
+  hidden_columns:
+  - '*'
+transform_order:
+- type_join_0
+- type_rename_column_1

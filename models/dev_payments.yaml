@@ -1,0 +1,37 @@
+model:
+  table_name: payments
+  schema_name: dev
+source:
+  table_name: raw_payments
+  schema_name: raw
+  materialization: TABLE
+transform:
+  type_synthesize_0:
+    type: synthesize
+    synthesize:
+      columns:
+      - type: FORMULA
+        operation:
+          formula: QUOTIENT(amount,100)
+        column_name: amount_in_dollars
+      transformation_id: type_synthesize_0
+      transformation_type: synthesize
+  type_rename_column_1:
+    type: rename_column
+    rename_column:
+      mappings:
+      - new_name: payment_id
+        old_name: id
+        original_name: id
+      transformation_id: type_rename_column_1
+      transformation_type: rename_column
+presentation:
+  sort:
+  - column: payment_id
+    order_by: ASC
+    data_type: Number
+  hidden_columns:
+  - '*'
+transform_order:
+- type_synthesize_0
+- type_rename_column_1

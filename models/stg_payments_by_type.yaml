@@ -1,0 +1,71 @@
+model:
+  table_name: order_payments
+  schema_name: stg
+source:
+  table_name: payments
+  schema_name: dev
+  materialization: TABLE
+reference:
+- dev_payments
+transform:
+  type_synthesize_0:
+    type: synthesize
+    synthesize:
+      columns:
+      - type: FORMULA
+        operation:
+          formula: IF(payment_method="credit_card",amount_in_dollars,0)
+        column_name: credit_card_amount
+      - type: FORMULA
+        operation:
+          formula: IF(payment_method = "coupon",amount_in_dollars,0)
+        column_name: coupon_amount
+      - type: FORMULA
+        operation:
+          formula: 'IF(payment_method =
+
+            "bank_transfer",amount_in_dollars,0)'
+        column_name: bank_transfer_amount
+      - type: FORMULA
+        operation:
+          formula: IF(payment_method = "gift_card",amount_in_dollars,0)
+        column_name: gift_card_amount
+      transformation_id: type_synthesize_0
+      transformation_type: synthesize
+  groups_and_aggregation_1:
+    type: groups_and_aggregation
+    groups_and_aggregation:
+      group:
+      - order_id
+      filter:
+        criteria: []
+      having:
+        criteria: []
+      aggregate_columns:
+      - alias: credit_card_amount_total
+        column: credit_card_amount
+        function: SUM
+      - alias: coupon_total
+        column: coupon_amount
+        function: SUM
+      - alias: transaction_total
+        column: bank_transfer_amount
+        function: SUM
+      - alias: gift_card_amount_total
+        column: gift_card_amount
+        function: SUM
+      - alias: total_amount_in_dollars
+        column: amount_in_dollars
+        function: SUM
+      transformation_id: groups_and_aggregation_1
+      transformation_type: groups_and_aggregation
+presentation:
+  sort:
+  - column: order_id
+    order_by: ASC
+    data_type: Number
+  hidden_columns:
+  - '*'
+transform_order:
+- type_synthesize_0
+- groups_and_aggregation_1

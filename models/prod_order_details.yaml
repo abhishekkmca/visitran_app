@@ -1,0 +1,47 @@
+model:
+  table_name: order_final
+  schema_name: prod
+source:
+  table_name: orders
+  schema_name: dev
+  materialization: TABLE
+reference:
+- dev_orders
+- stg_payments_by_type
+transform:
+  type_join_0:
+    join:
+      tables:
+      - type: Inner
+        criteria:
+        - condition:
+            lhs:
+              type: COLUMN
+              column:
+                data_type: Number
+                table_name: orders
+                column_name: order_id
+                schema_name: dev
+            rhs:
+              type: COLUMN
+              column:
+                data_type: Number
+                table_name: order_payments
+                column_name: order_id
+                schema_name: stg
+            operator: EQ
+        joined_table:
+          table_name: order_payments
+          schema_name: stg
+      transformation_id: type_join_0
+      transformation_type: join
+    type: join
+presentation:
+  sort:
+  - column: order_id
+    order_by: ASC
+    data_type: Number
+  hidden_columns:
+  - '*'
+transform_order:
+- type_join_0

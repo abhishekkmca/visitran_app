@@ -1,0 +1,26 @@
+model:
+  table_name: customers
+  schema_name: dev
+source:
+  table_name: raw_customers
+  schema_name: raw
+  materialization: TABLE
+transform:
+  type_rename_column_0:
+    type: rename_column
+    rename_column:
+      mappings:
+      - new_name: customer_id
+        old_name: id
+        original_name: id
+      transformation_id: type_rename_column_0
+      transformation_type: rename_column
+presentation:
+  sort:
+  - column: customer_id
+    order_by: ASC
+    data_type: Number
+  hidden_columns:
+  - '*'
+transform_order:
+- type_rename_column_0
