@@ -62,7 +62,7 @@ transform:
 presentation:
   sort:
   - column: order_id
-    order_by: DESC
+    order_by: ASC
     data_type: Number
   hidden_columns:
   - '*'
