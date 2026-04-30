@@ -66,7 +66,6 @@ presentation:
     data_type: Number
   hidden_columns:
   - '*'
-source_model: dev_payments
 transform_order:
 - type_synthesize_0
 - groups_and_aggregation_1
