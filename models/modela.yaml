@@ -1,0 +1,15 @@
+model:
+  table_name: modela
+  schema_name: source
+source:
+  table_name: country
+  schema_name: source
+  materialization: TABLE
+reference: []
+transform: {}
+presentation:
+  sort: []
+  hidden_columns:
+  - '*'
+source_model: null
+transform_order: []
