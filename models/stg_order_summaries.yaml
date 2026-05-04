@@ -27,8 +27,8 @@ transform:
       - alias: number_of_orders
         column: order_id
         function: COUNT
-      transformation_type: groups_and_aggregation
       transformation_id: groups_and_aggregation_0
+      transformation_type: groups_and_aggregation
 presentation:
   sort:
   - column: customer_id
