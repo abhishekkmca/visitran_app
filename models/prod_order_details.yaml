@@ -39,9 +39,10 @@ transform:
 presentation:
   sort:
   - column: order_id
-    order_by: ASC
+    order_by: DESC
     data_type: Number
   hidden_columns:
   - '*'
+source_model: dev_orders
 transform_order:
 - type_join_0
